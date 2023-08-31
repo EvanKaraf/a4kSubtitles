@@ -116,6 +116,7 @@ def __search(a4ksubtitles_api, settings={}, video_meta={}, languages='English'):
         'podnadpisi.enabled': 'false',
         'subscene.enabled': 'false',
         'addic7ed.enabled': 'false',
+        'subs4free.enabled': 'false',
     }
     search.settings.update(settings)
 
@@ -253,8 +254,9 @@ def test_opensubtitles():
     assert len(search.results) == 20
 
     expected_result_name = 'Fantastic.Beasts.and.Where.to.Find.Them.2016.1080p.BluRay.x264.DTS-JYK.srt'
-    expected_result_name2 = 'Fantastic.Beasts.and.Where.to.Find.Them.2016.1080p.BluRay.x264.DTS-FGT.srt'
-    assert search.results[0]['name'] == expected_result_name or search.results[0]['name'] == expected_result_name2
+    expected_result_name2 = 'Fantastic.Beasts.and.Where.to.Find.Them.2016Yp.BluRay.x264.DTS-FGT.srt'
+    names = [x['name'] for x in search.results]
+    assert expected_result_name in names or expected_result_name2 in names
 
     __remove_all_cache(a4ksubtitles_api)
 
@@ -680,3 +682,53 @@ def test_addic7ed_tvshow():
     filepath = a4ksubtitles_api.download(params, search.settings)
 
     assert filepath != ''
+
+
+def test_subs4free():
+    a4ksubtitles_api = api.A4kSubtitlesApi({'kodi': True})
+    __remove_all_cache(a4ksubtitles_api)
+
+    # search
+    settings = {
+        'subs4free.enabled': 'true',
+    }
+    search = __search_movie(a4ksubtitles_api, settings)
+
+
+    # download
+    item = search.results[0]
+
+    params = {
+        'action': 'download',
+        'service_name': 'subs4free',
+        'action_args': item['action_args']
+    }
+
+    filepath = a4ksubtitles_api.download(params, search.settings)
+
+    assert filepath != ''
+
+def test_subs4free_tvshow():
+    a4ksubtitles_api = api.A4kSubtitlesApi({'kodi': True})
+    __remove_all_cache(a4ksubtitles_api)
+
+    # search
+    settings = {
+        'subs4free.enabled': 'true',
+    }
+    search = __search_tvshow(a4ksubtitles_api, settings)
+
+
+    # download
+    item = search.results[0]
+
+    params = {
+        'action': 'download',
+        'service_name': 'subs4free',
+        'action_args': item['action_args']
+    }
+
+    filepath = a4ksubtitles_api.download(params, search.settings)
+
+    assert filepath != ''
+

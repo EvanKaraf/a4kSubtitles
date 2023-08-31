@@ -5,6 +5,7 @@
        provider-name="Unknown">
     <requires>
       <import addon="script.module.requests"/>
+      <import addon="script.module.beautifulsoup4"/>
       <import addon="vfs.libarchive" optional="true"/>
     </requires>
     <extension point="xbmc.subtitle.module" library="main.py"/>
